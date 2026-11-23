@@ -1,0 +1,42 @@
+project: churn-prediction
+experiment: baseline-vs-tuned
+seed: 42
+
+data:
+  path: data/churn.csv
+  target: churned
+  split:
+    test_size: 0.2
+    validation_size: 0.2
+    stratify: true
+
+model:
+  type: xgboost_classifier
+  params:
+    n_estimators: 300
+
+metrics:
+  primary: roc_auc
+  additional: [ f1, precision, recall ]
+
+tuning:
+  enabled: true
+  n_trials: 50
+  direction: maximize
+  pruner: median
+  search_space:
+    max_depth: { type: int, low: 3, high: 10 }
+    learning_rate: { type: float, low: 0.01, high: 0.3, log: true }
+    subsample: { type: float, low: 0.5, high: 1.0 }
+
+tracking:
+  tracking_uri: ./mlruns
+  tags:
+    owner: gerard
+
+registry:
+  register_best: true
+  model_name: churn-model
+  promotion:
+    metric: roc_auc
+    min_improvement: 0.005 # must beat the current champion by this margin
