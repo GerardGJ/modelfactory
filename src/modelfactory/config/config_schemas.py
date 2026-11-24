@@ -1,5 +1,7 @@
 from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field
+
 
 class StrictModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -13,6 +15,7 @@ class SplitConfig(StrictModel):
 
 class DataConfig(StrictModel):
     path: str
+    separator: str = ","
     target: str
     split: SplitConfig = SplitConfig()
 
@@ -45,7 +48,7 @@ class TuningConfig(StrictModel):
     n_trials: int = Field(50, gt=0)
     direction: Literal["maximize", "minimize"] = "maximize"
     pruner: str | None = None
-    search_space: dict[str , IntParam | FloatParam] = {}
+    search_space: dict[str, IntParam | FloatParam] = {}
 
 
 class TrackingConfig(StrictModel):
@@ -61,7 +64,7 @@ class PromotionConfig(StrictModel):
 class RegistryConfig(StrictModel):
     register_best: bool = True
     model_name: str
-    promotion: PromotionConfig 
+    promotion: PromotionConfig
 
 
 class Config(StrictModel):

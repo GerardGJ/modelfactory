@@ -1,5 +1,8 @@
+from modelfactory.pipeline import Pipeline
+
+
 def main():
-    print("Hello from modelfactory!")
+    Pipeline.from_yaml("configs/config.yaml").run()
 
 
 if __name__ == "__main__":
